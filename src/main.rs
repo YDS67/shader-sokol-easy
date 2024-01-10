@@ -1,13 +1,13 @@
 fn main() {
     let gl_vert: String = format!("vert.glsl");
     let gl_frag: String = format!("frag.glsl");
-    let hl_vert: String = format!("vert.hlsl");
-    let hl_frag: String = format!("frag.hlsl");
+    //let hl_vert: String = format!("vert.hlsl");
+    //let hl_frag: String = format!("frag.hlsl");
     shader_comp(
         &string_to_bytes(&gl_vert), 
         &string_to_bytes(&gl_frag),
-        &string_to_bytes(&hl_vert), 
-        &string_to_bytes(&hl_frag),
+       // &string_to_bytes(&hl_vert), 
+       // &string_to_bytes(&hl_frag),
     )
 }
 
@@ -16,7 +16,7 @@ fn string_to_bytes(file_path: &str) -> Vec<u8> {
     file.as_bytes().to_vec()
 }
 
-fn shader_comp(vert1: &[u8], frag1: &[u8], vert2: &[u8], frag2: &[u8]) {
+fn shader_comp(vert1: &[u8], frag1: &[u8]) {
     use std::io::BufReader;
     use std::io::BufRead;
     use std::fs::File;
@@ -60,31 +60,6 @@ fn shader_comp(vert1: &[u8], frag1: &[u8], vert2: &[u8], frag2: &[u8]) {
     writeln!(my_file, "{}", " ").expect("Error writing to file");   
     writeln!(my_file, "pub const FS_SOURCE_GLSL330: [u8; {}] = [", frag_l+3).expect("Error writing to file");
     for f in frag1 {
-        write!(my_file, "0x{:x}, ", f).expect("Error writing to file");
-    }
-    write!(my_file, "0x0a, 0x0a, 0x00,").expect("Error writing to file");
-    write!(my_file, "\n").expect("Error writing to file");
-    writeln!(my_file, "];").expect("Error writing to file");
-
-    let vert_l = vert2.len();
-    let frag_l = frag2.len();
-
-    // VERTEX SHADER
-
-    writeln!(my_file, "{}", " ").expect("Error writing to file");   
-    writeln!(my_file, "pub const VS_SOURCE_HLSL4: [u8; {}] = [", vert_l+3).expect("Error writing to file");
-    for v in vert2 {
-        write!(my_file, "0x{:x}, ", v).expect("Error writing to file");
-    }
-    write!(my_file, "0x0a, 0x0a, 0x00,").expect("Error writing to file");
-    write!(my_file, "\n").expect("Error writing to file");
-    writeln!(my_file, "];").expect("Error writing to file");
-
-    // FRAGMENT SHADER
-
-    writeln!(my_file, "{}", " ").expect("Error writing to file");   
-    writeln!(my_file, "pub const FS_SOURCE_HLSL4: [u8; {}] = [", frag_l+3).expect("Error writing to file");
-    for f in frag2 {
         write!(my_file, "0x{:x}, ", f).expect("Error writing to file");
     }
     write!(my_file, "0x0a, 0x0a, 0x00,").expect("Error writing to file");
