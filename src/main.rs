@@ -1,18 +1,20 @@
+use std::path::Path;
+
 fn main() {
-    let gl_vert: String = format!("vert.glsl");
-    let gl_frag: String = format!("frag.glsl");
+    let gl_vert = Path::new("src/vert.glsl");
+    let gl_frag = Path::new("src/frag.glsl");
     //let hl_vert: String = format!("vert.hlsl");
     //let hl_frag: String = format!("frag.hlsl");
     shader_comp(
-        &string_to_bytes(&gl_vert), 
-        &string_to_bytes(&gl_frag),
+        &string_to_bytes(gl_vert), 
+        &string_to_bytes(gl_frag),
        // &string_to_bytes(&hl_vert), 
        // &string_to_bytes(&hl_frag),
     )
 }
 
-fn string_to_bytes(file_path: &str) -> Vec<u8> {
-    let file = std::fs::read_to_string(file_path).expect(&format!("Error opening file {}", file_path));
+fn string_to_bytes(file_path: &Path) -> Vec<u8> {
+    let file = std::fs::read_to_string(file_path).expect(&format!("Error opening file"));
     file.as_bytes().to_vec()
 }
 
@@ -21,14 +23,12 @@ fn shader_comp(vert1: &[u8], frag1: &[u8]) {
     use std::io::BufRead;
     use std::fs::File;
     use std::io::Write;
-    use std::path::PathBuf;
 
-    let file = File::open("shader_code.rs").expect(&format!("Error opening file {}", "shader_code.rs"));
+    let file = File::open(Path::new("src/shader_code.rs")).expect(&format!("Error opening file {}", "shader_code.rs"));
     let reader = BufReader::new(file);
     let mut file_contents: Vec<String> = Vec::new();
 
-    let fl_name = format!("shader.rs");
-    let file_path: PathBuf = [fl_name].iter().collect();
+    let file_path = Path::new("src/shader.rs");
     let mut my_file = File::create(file_path).expect("Error creating file");
 
     let mut n = 0;
